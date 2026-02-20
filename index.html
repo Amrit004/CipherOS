@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CipherOS — Cryptography Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="crt-overlay"></div>
+<div class="noise"></div>
+
+<div class="os-shell">
+
+  <!-- Title Bar -->
+  <div class="title-bar">
+    <div class="title-dots">
+      <span class="dot red"></span>
+      <span class="dot amber"></span>
+      <span class="dot green"></span>
+    </div>
+    <div class="title-text">CipherOS v2.4.1 — Cryptography Toolkit</div>
+    <div class="title-right">
+      <span class="status-led">■</span>
+      <span id="sysTime"></span>
+    </div>
+  </div>
+
+  <!-- Layout: sidebar + main -->
+  <div class="shell-body">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">MODULES</div>
+      <nav>
+        <button class="mod-btn active" data-module="terminal">
+          <span class="mod-icon">$_</span> Terminal
+        </button>
+        <button class="mod-btn" data-module="encrypt">
+          <span class="mod-icon">🔒</span> Encrypt/Decrypt
+        </button>
+        <button class="mod-btn" data-module="hash">
+          <span class="mod-icon">#</span> Hash Generator
+        </button>
+        <button class="mod-btn" data-module="jwt">
+          <span class="mod-icon">⟨/⟩</span> JWT Decoder
+        </button>
+        <button class="mod-btn" data-module="password">
+          <span class="mod-icon">🛡</span> Password Analyser
+        </button>
+        <button class="mod-btn" data-module="encoder">
+          <span class="mod-icon">01</span> Encoder/Decoder
+        </button>
+        <button class="mod-btn" data-module="keygen">
+          <span class="mod-icon">🔑</span> Key Generator
+        </button>
+      </nav>
+
+      <div class="sidebar-section">SYSTEM STATUS</div>
+      <div class="sys-stats">
+        <div class="sys-row"><span>ENCRYPTION</span><span class="ok">AES-256-GCM</span></div>
+        <div class="sys-row"><span>HASHING</span><span class="ok">SHA-512</span></div>
+        <div class="sys-row"><span>TLS</span><span class="ok">v1.3</span></div>
+        <div class="sys-row"><span>ENTROPY</span><span class="ok" id="entropyVal">HIGH</span></div>
+      </div>
+    </aside>
+
+    <!-- Module panels -->
+    <main class="module-area">
+
+      <!-- ======= TERMINAL ======= -->
+      <div class="module active" id="mod-terminal">
+        <div class="module-header">
+          <span class="mh-title">Interactive Terminal</span>
+          <span class="mh-sub">Type <code>help</code> for commands</span>
+        </div>
+        <div class="terminal-output" id="termOutput">
+          <div class="term-line system">CipherOS v2.4.1 — Secure Cryptography Environment</div>
+          <div class="term-line system">Initialised at <span id="initTime"></span> UTC</div>
+          <div class="term-line system">Type <span class="hl">help</span> for available commands.</div>
+          <div class="term-line dim">──────────────────────────────────────────</div>
+        </div>
+        <div class="terminal-input-row">
+          <span class="prompt">cipher@os:~$</span>
+          <input type="text" id="termInput" class="term-input" placeholder="Enter command..." autocomplete="off" spellcheck="false"/>
+        </div>
+      </div>
+
+      <!-- ======= ENCRYPT/DECRYPT ======= -->
+      <div class="module" id="mod-encrypt">
+        <div class="module-header">
+          <span class="mh-title">AES-256 Encrypt / Decrypt</span>
+          <span class="mh-sub">XOR-based symmetric cipher simulation</span>
+        </div>
+        <div class="panel-grid2">
+          <div class="panel-box">
+            <label class="field-label">PLAINTEXT / CIPHERTEXT</label>
+            <textarea id="encInput" class="term-area" rows="5" placeholder="Enter text to encrypt or decrypt…"></textarea>
+            <label class="field-label">SECRET KEY (passphrase)</label>
+            <input id="encKey" class="term-field" type="text" placeholder="Enter secret passphrase…"/>
+            <div class="btn-row">
+              <button class="action-btn green" onclick="doEncrypt()">🔒 ENCRYPT</button>
+              <button class="action-btn amber" onclick="doDecrypt()">🔓 DECRYPT</button>
+              <button class="action-btn dim" onclick="clearEnc()">CLEAR</button>
+            </div>
+          </div>
+          <div class="panel-box">
+            <label class="field-label">OUTPUT</label>
+            <textarea id="encOutput" class="term-area" rows="5" readonly placeholder="Output will appear here…"></textarea>
+            <div class="algo-info">
+              <div class="algo-row"><span class="algo-lbl">ALGORITHM</span><span class="algo-val">AES-256-CBC (simulated)</span></div>
+              <div class="algo-row"><span class="algo-lbl">ENCODING</span><span class="algo-val">Base64</span></div>
+              <div class="algo-row"><span class="algo-lbl">KEY STRETCH</span><span class="algo-val">PBKDF2-SHA256, 100k iter</span></div>
+            </div>
+            <button class="action-btn green full" onclick="copyField('encOutput')">COPY OUTPUT</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= HASH GENERATOR ======= -->
+      <div class="module" id="mod-hash">
+        <div class="module-header">
+          <span class="mh-title">Cryptographic Hash Generator</span>
+          <span class="mh-sub">SHA-256 · SHA-512 · MD5 (legacy) · HMAC</span>
+        </div>
+        <label class="field-label">INPUT DATA</label>
+        <textarea id="hashInput" class="term-area" rows="3" placeholder="Enter text to hash…"></textarea>
+        <div class="hash-options">
+          <label class="field-label">ALGORITHM</label>
+          <div class="radio-row">
+            <label class="radio-opt"><input type="radio" name="hashAlgo" value="sha256" checked> SHA-256</label>
+            <label class="radio-opt"><input type="radio" name="hashAlgo" value="sha512"> SHA-512</label>
+            <label class="radio-opt"><input type="radio" name="hashAlgo" value="md5"> MD5</label>
+            <label class="radio-opt"><input type="radio" name="hashAlgo" value="sha1"> SHA-1</label>
+          </div>
+          <label class="field-label">HMAC KEY (optional)</label>
+          <input id="hmacKey" class="term-field" type="text" placeholder="Leave blank for plain hash…"/>
+        </div>
+        <button class="action-btn green" onclick="doHash()">GENERATE HASH</button>
+        <div class="hash-results" id="hashResults"></div>
+      </div>
+
+      <!-- ======= JWT DECODER ======= -->
+      <div class="module" id="mod-jwt">
+        <div class="module-header">
+          <span class="mh-title">JWT Token Decoder</span>
+          <span class="mh-sub">Decode and inspect JSON Web Tokens</span>
+        </div>
+        <label class="field-label">JWT TOKEN</label>
+        <textarea id="jwtInput" class="term-area" rows="4" placeholder="Paste your JWT token here… eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9…"></textarea>
+        <div class="btn-row">
+          <button class="action-btn green" onclick="decodeJWT()">DECODE TOKEN</button>
+          <button class="action-btn amber" onclick="loadSampleJWT()">LOAD SAMPLE</button>
+        </div>
+        <div class="jwt-output" id="jwtOutput"></div>
+      </div>
+
+      <!-- ======= PASSWORD ANALYSER ======= -->
+      <div class="module" id="mod-password">
+        <div class="module-header">
+          <span class="mh-title">Password Strength Analyser</span>
+          <span class="mh-sub">Real-time entropy and crack-time estimation</span>
+        </div>
+        <label class="field-label">PASSWORD</label>
+        <div class="pw-input-wrap">
+          <input id="pwInput" class="term-field" type="password" placeholder="Type a password to analyse…"/>
+          <button class="toggle-vis" onclick="togglePwVis()">👁</button>
+        </div>
+        <div class="strength-meter">
+          <div class="strength-bar-bg">
+            <div class="strength-bar-fill" id="strengthFill"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel">—</div>
+        </div>
+        <div class="pw-analysis" id="pwAnalysis"></div>
+        <div class="pw-suggest" id="pwSuggest"></div>
+      </div>
+
+      <!-- ======= ENCODER/DECODER ======= -->
+      <div class="module" id="mod-encoder">
+        <div class="module-header">
+          <span class="mh-title">Encoder / Decoder</span>
+          <span class="mh-sub">Base64 · URL encoding · Hex · Binary · ROT13</span>
+        </div>
+        <label class="field-label">INPUT</label>
+        <textarea id="encodeInput" class="term-area" rows="3" placeholder="Enter text to encode or decode…"></textarea>
+        <div class="encode-grid">
+          <button class="action-btn green" onclick="doEncode('base64enc')">Base64 Encode</button>
+          <button class="action-btn amber" onclick="doEncode('base64dec')">Base64 Decode</button>
+          <button class="action-btn green" onclick="doEncode('urlenc')">URL Encode</button>
+          <button class="action-btn amber" onclick="doEncode('urldec')">URL Decode</button>
+          <button class="action-btn green" onclick="doEncode('hex')">→ Hex</button>
+          <button class="action-btn amber" onclick="doEncode('unhex')">Hex →</button>
+          <button class="action-btn green" onclick="doEncode('bin')">→ Binary</button>
+          <button class="action-btn dim" onclick="doEncode('rot13')">ROT-13</button>
+        </div>
+        <label class="field-label">OUTPUT</label>
+        <textarea id="encodeOutput" class="term-area" rows="3" readonly placeholder="Output appears here…"></textarea>
+        <button class="action-btn green" onclick="copyField('encodeOutput')">COPY</button>
+      </div>
+
+      <!-- ======= KEY GENERATOR ======= -->
+      <div class="module" id="mod-keygen">
+        <div class="module-header">
+          <span class="mh-title">Cryptographic Key Generator</span>
+          <span class="mh-sub">Generate secure keys, secrets, and UUIDs</span>
+        </div>
+        <div class="keygen-options">
+          <div class="keygen-group">
+            <label class="field-label">TYPE</label>
+            <select id="keyType" class="term-field">
+              <option value="hex">Random Hex Key</option>
+              <option value="base64">Random Base64 Key</option>
+              <option value="uuid">UUID v4</option>
+              <option value="password">Secure Password</option>
+              <option value="jwt_secret">JWT Secret (256-bit)</option>
+              <option value="api_key">API Key</option>
+            </select>
+          </div>
+          <div class="keygen-group">
+            <label class="field-label">LENGTH (bits / chars)</label>
+            <input id="keyLen" class="term-field" type="number" value="256" min="64" max="4096" step="64"/>
+          </div>
+        </div>
+        <button class="action-btn green" onclick="generateKey()">⚡ GENERATE</button>
+        <div class="keygen-results" id="keygenResults"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
