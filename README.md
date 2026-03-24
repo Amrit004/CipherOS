@@ -13,6 +13,8 @@
 
 </div>
 
+![CipherOS Screenshot](screenshot.png)
+
 ---
 
 A browser-based cryptographic toolkit with a retro CRT terminal aesthetic. Built entirely with vanilla HTML, CSS, and JavaScript using the **Web Crypto API** — no external libraries, no backend, fully client-side.
