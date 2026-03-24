@@ -1,67 +1,39 @@
 # 🔒 CipherOS — Cryptography Toolkit
 
+<div align="center">
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Web Crypto API](https://img.shields.io/badge/Web_Crypto_API-1E3A5F?style=for-the-badge&logo=npm&logoColor=white)
+
+**Browser-Based Cryptographic Toolkit with Retro Terminal Aesthetic**
+
+[Live Demo](https://cipheros.vercel.app) · [View Code](https://github.com/Amrit004/cipheros)
+
+</div>
+
+---
+
 A browser-based cryptographic toolkit with a retro CRT terminal aesthetic. Built entirely with vanilla HTML, CSS, and JavaScript using the **Web Crypto API** — no external libraries, no backend, fully client-side.
 
 ## 🚀 Features
 
-### Interactive Terminal
-- Full command-line interface with command history (↑/↓ arrows)
-- Commands: `hash`, `encode64`, `decode64`, `hex`, `rot13`, `entropy`, `pwcheck`, `uuid`, `random`, `clear`
-- Shannon entropy calculator for text analysis
-
-### AES-256 Encrypt / Decrypt
-- XOR-based symmetric cipher with Base64 output
-- Passphrase-based key derivation (PBKDF2-SHA256 concept)
-- Encrypt any plaintext and decrypt back with the same key
-
-### Cryptographic Hash Generator
-- **SHA-256**, **SHA-512**, **SHA-1** via `crypto.subtle.digest()`
-- **MD5** (pure JS implementation — legacy/educational use)
-- **HMAC** support for all algorithms with custom secret keys
-
-### JWT Token Decoder
-- Decodes Header, Payload, and Signature sections
-- Pretty-prints all claims with human-readable timestamps (iat, exp, nbf)
-- Detects expired tokens and unknown algorithms
-- Includes a sample JWT for demonstration
-
-### Password Strength Analyser
-- Real-time entropy calculation (bits)
-- 8 security checks: length, case, digits, symbols, repeated chars, common patterns
-- Crack time estimation (seconds → centuries)
-- Actionable improvement suggestions
-
-### Encoder / Decoder
-- **Base64** encode/decode
-- **URL** encode/decode
-- **Hex** encode/decode
-- **Binary** conversion
-- **ROT-13** transform
-
-### Cryptographic Key Generator
-- Random Hex keys (configurable bit length)
-- Random Base64 keys
-- **UUID v4** (using `crypto.getRandomValues`)
-- Secure passwords (full charset, configurable entropy)
-- **JWT secrets** (256-bit, Hex + Base64)
-- **API keys** (formatted `sk_live_...`)
-
-## 🧰 Tech Stack
-
-| Layer     | Technology                                      |
-|-----------|-------------------------------------------------|
-| Crypto    | Web Crypto API (`crypto.subtle`, `crypto.getRandomValues`) |
-| Frontend  | HTML5, CSS3 (CRT animations, custom properties) |
-| Scripting | Vanilla JavaScript (ES6+, async/await)          |
-| Design    | Retro terminal / CRT phosphor aesthetic         |
-| Fonts     | Share Tech Mono, Orbitron                       |
+| Module | Capabilities |
+|--------|--------------|
+| **Interactive Terminal** | Command history (↑/↓), 10 commands (`hash`, `encode64`, `decode64`, `hex`, `rot13`, `entropy`, `pwcheck`, `uuid`, `random`, `clear`) |
+| **AES-256 Encrypt/Decrypt** | XOR-based symmetric cipher with passphrase key derivation |
+| **Hash Generator** | SHA-256, SHA-512, SHA-1, MD5 (pure JS), HMAC support |
+| **JWT Decoder** | Header/Payload/Signature parsing with human-readable timestamps |
+| **Password Analyser** | Real-time entropy, 8 security checks, crack time estimation |
+| **Encoder/Decoder** | Base64, URL, Hex, Binary, ROT-13 |
+| **Key Generator** | Hex keys (configurable bits), UUID v4, secure passwords, JWT secrets |
 
 ## 🔐 Security Notes
 
 - **All operations are client-side** — no data leaves your browser
 - The XOR cipher is for educational demonstration; production use should use AES-GCM via SubtleCrypto
 - MD5 and SHA-1 are included for legacy/compatibility; use SHA-256+ for security
-- JWT signature verification requires the server-side secret — this tool only decodes
 
 ## 📂 Project Structure
 
@@ -75,17 +47,20 @@ cipheros/
 └── README.md
 ```
 
-## ⚡ Getting Started
+## ⚡ Quick Start
 
 ```bash
 git clone https://github.com/Amrit004/cipheros.git
+cd cipheros
 open index.html   # No server required
 ```
 
-## 💡 Motivation
+---
 
-This project demonstrates applied knowledge from my **MSc Security & Authentication** module at Queen Mary University of London, combined with practical cryptography concepts from enterprise work at Bank of America. It showcases real-world security tooling using the browser's native Web Crypto API.
+<div align="center">
 
-## 📄 Licence
+**Built by Amritpal Singh Kaur**
 
-MIT — Built by **Amritpal Singh Kaur** · [GitHub](https://github.com/Amrit004)
+[LinkedIn](https://linkedin.com/in/amritpal-singh-kaur-b54b9a1b1) · [GitHub](https://github.com/Amrit004) · [Portfolio](https://apsk-dev.vercel.app)
+
+</div>
